@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_15_005333) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_21_013703) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "order_events", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "event_type"
+    t.jsonb "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_events_on_order_id"
+  end
 
   create_table "orders", force: :cascade do |t|
     t.string "status", default: "pending", null: false
@@ -21,4 +30,5 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_15_005333) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "order_events", "orders"
 end

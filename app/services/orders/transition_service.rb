@@ -12,10 +12,6 @@ module Orders
     end
 
     def call
-      unless @order.aasm.events(permitted: true).map(&:name).include?(@event.to_sym)
-        raise AASM::InvalidTransition, "Event '#{@event}' not allowed from current state"
-      end
-
       @order.public_send("#{@event}!")
       @order
     end
