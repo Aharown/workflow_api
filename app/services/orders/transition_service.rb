@@ -13,6 +13,14 @@ module Orders
 
     def call
       @order.public_send("#{@event}!")
+      OrderEvent.create!(
+        order: @order,
+        event_type: @event,
+        metadata: {
+          state: @order.state,
+          user_id: @user&.id             
+        }
+      )
       @order
     end
   end
