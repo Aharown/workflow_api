@@ -12,13 +12,15 @@ module Orders
     end
 
     def call
+      previous_state = @order.state
+
       @order.public_send("#{@event}!")
       OrderEvent.create!(
         order: @order,
         event_type: @event,
         metadata: {
-          state: @order.state,
-          user_id: @user&.id             
+          from: previous_state,
+          to: @order.state
         }
       )
       @order
