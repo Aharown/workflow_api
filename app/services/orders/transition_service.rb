@@ -14,7 +14,7 @@ module Orders
     def call
       previous_state = @order.state
 
-      @order.public_send("#{@event}!")
+      @order.public_send("#{@event}")
       OrderEvent.create!(
         order: @order,
         event_type: @event,
@@ -23,7 +23,18 @@ module Orders
           to: @order.state
         }
       )
+      trigger_background_jobs
+
       @order
     end
+
+    private
+
+    def trigger_background_jobs
+      if @event.to_sym == :confirm
+        PaymentCaptureJob.perform_later(@order.id)
+      end
+    end
+
   end
 end
