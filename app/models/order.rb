@@ -1,6 +1,8 @@
 class Order < ApplicationRecord
   include AASM
 
+  has_many :order_events, dependent: :destroy
+
   aasm column: "status" do
     state :pending, initial: true
     state :confirmed
@@ -34,7 +36,7 @@ class Order < ApplicationRecord
 
   private
 
-  
+
   def can_confirm?
     !cancelled?
   end
