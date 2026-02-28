@@ -12,26 +12,30 @@ module Orders
     end
 
     def call
-      previous_state = @order.state
+      event_name = @event.to_sym
 
-      @order.public_send("#{@event}")
+      return @order unless @order.aasm.may_fire_event?(event_name)
+
+      previous_state = @order.status
+
+      @order.public_send(event_name)
       OrderEvent.create!(
         order: @order,
-        event_type: @event,
+        event_type: event_name
         metadata: {
           from: previous_state,
-          to: @order.state
+          to: @order.status
         }
       )
-      trigger_background_jobs
+      trigger_background_jobs(event_name)
 
       @order
     end
 
     private
 
-    def trigger_background_jobs
-      if @event.to_sym == :confirm
+    def trigger_background_jobs(event_name)
+      if event_name == :confirm
         PaymentCaptureJob.perform_later(@order.id)
       end
     end
