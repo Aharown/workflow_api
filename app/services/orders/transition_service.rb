@@ -18,10 +18,10 @@ module Orders
 
       previous_state = @order.status
 
-      @order.public_send(event_name)
+      @order.public_send("#{event_name}!")
       OrderEvent.create!(
         order: @order,
-        event_type: event_name
+        event_type: event_name,
         metadata: {
           from: previous_state,
           to: @order.status

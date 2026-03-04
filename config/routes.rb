@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post :ship
       post :deliver
       post :cancel
+      post :transition
     end
   end
   # Defines the root path route ("/")

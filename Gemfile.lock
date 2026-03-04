@@ -102,6 +102,11 @@ GEM
       cgi (>= 0.3.3)
     error_highlight (0.7.0)
     erubi (1.13.1)
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.8)
@@ -234,6 +239,8 @@ GEM
       rspec-support (~> 3.13)
     rspec-support (3.13.7)
     securerandom (0.4.1)
+    shoulda-matchers (5.3.0)
+      activesupport (>= 5.2.0)
     sqlite3 (2.8.1-aarch64-linux-gnu)
     sqlite3 (2.8.1-aarch64-linux-musl)
     sqlite3 (2.8.1-arm-linux-gnu)
@@ -271,10 +278,12 @@ DEPENDENCIES
   bootsnap
   debug
   error_highlight (>= 0.4.0)
+  factory_bot_rails
   pg
   puma (>= 5.0)
   rails (~> 7.1.6)
   rspec-rails
+  shoulda-matchers (~> 5.0)
   sqlite3 (>= 1.4)
   tzinfo-data
 
