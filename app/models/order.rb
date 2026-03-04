@@ -1,7 +1,9 @@
 class Order < ApplicationRecord
-  include AASM
-
   has_many :order_events, dependent: :destroy
+
+  validates :status, presence: true
+
+  include AASM
 
   aasm column: "status" do
     state :pending, initial: true

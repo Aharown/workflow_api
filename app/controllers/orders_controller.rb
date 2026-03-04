@@ -19,28 +19,24 @@ class OrdersController < ApplicationController
     render json: orders
   end
 
-  def confirm
-    transition(:confirm)
-  end
-
-  def ship
-    transition(:ship)
-  end
-
-  def deliver
-    transition(:deliver)
-  end
-
-  def cancel
-    transition(:cancel)
-  end
-
-  private
-
-  def transition(event)   #maintainable
+  def transition
+    event = params[:event]
     order = find_order
-    Orders::TransitionService.call(order: order, event: event)
-    render json: order
+    return render json: { error: "Missing event" }, status: :unprocessable_entity unless event
+
+    unless order.aasm.events.map(&:name).include?(event.to_sym)
+      return render json: { error: "Invalid event" }, status: :unprocessable_entity
+    end
+
+    previous_state = order.status
+
+    updated_order = Orders::TransitionService.call(order: order, event: event)
+
+    if previous_state == updated_order.status
+      render json: { error: "Transition not allowed" }, status: :unprocessable_entity
+    else
+      render json: updated_order, status: :ok
+    end
   end
 
   def order_params
