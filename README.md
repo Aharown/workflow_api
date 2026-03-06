@@ -98,6 +98,52 @@ This mirrors how larger systems structure application logic.
 
 ---
 
+### Idempotency
+Order transitions are implemented as idempotent operations.
+
+If a transition is requested multiple times, the system will not duplicate side effects or produce inconsistent state.
+
+POST /orders/1/transition
+{ "event": "confirm" }
+
+If the order is already confirmed, the request will return the current order state without triggering another transition or background job.
+
+This prevents issues caused by:
+	•	network retries
+	•	duplicate requests
+	•	client-side race conditions
+
+Idempotency is enforced by checking whether the state machine can fire the requested event before executing the transition.
+
+---
+
+### Testing
+The application uses RSpec for automated testing.
+
+Test coverage includes:
+
+Request Specs
+
+Verifies that API endpoints behave correctly.
+
+Examples tested:
+	•	order confirmation
+	•	event creation
+	•	background job triggering
+	•	idempotent transitions
+
+Model Specs
+
+Ensures domain rules are enforced, including:
+	•	valid state transitions
+	•	invalid transition prevention
+
+Job Specs
+
+Tests background jobs triggered by domain events.
+
+---
+
 ### Architectural Layers
 Controller
 → Handles HTTP concerns
