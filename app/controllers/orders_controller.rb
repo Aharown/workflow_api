@@ -30,7 +30,7 @@ class OrdersController < ApplicationController
 
     previous_state = order.status
 
-    updated_order = Orders::TransitionService.call(order: order, event: event)
+    updated_order = Orders::TransitionService.call(order: order, event: event, tracking_number: params[:tracking_number])
 
     if previous_state == updated_order.status
       render json: { error: "Transition not allowed" }, status: :unprocessable_entity
@@ -40,7 +40,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:total)
+    params.require(:order).permit(:total_amount)
   end
 
   def find_order

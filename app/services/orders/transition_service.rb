@@ -2,23 +2,30 @@
 
 module Orders
   class TransitionService
-    def self.call(order:, event:)
-      new(order, event).call
+    def self.call(order:, event:, tracking_number: nil)
+      new(order: order, event: event, tracking_number: tracking_number).call
     end
 
-    def initialize(order, event)
+    def initialize(order:, event:, tracking_number: nil)
       @order = order
       @event = event
+      @tracking_number = tracking_number
     end
 
     def call
       event_name = @event.to_sym
 
+      if event_name == :ship
+        @order.tracking_number = @tracking_number
+      end
+
       return @order unless @order.aasm.may_fire_event?(event_name)
 
       previous_state = @order.status
 
+
       @order.public_send("#{event_name}!")
+
       OrderEvent.create!(
         order: @order,
         event_type: event_name,
