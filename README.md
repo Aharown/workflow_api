@@ -196,9 +196,14 @@ State transitions are validated centrally.
 	•	Bundler
 
 ### Installation
+
+```bash
 git clone https://github.com/Aharown/workflow_api
 cd workflow_api
 bundle install
 rails db:create
 rails db:migrate
-rails s (http://localhost:3000)
+rails s
+```
+
+Visit `http://localhost:3000`
